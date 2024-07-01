@@ -17,6 +17,9 @@ $F(X) = \sum Y_i \left( \prod \frac{X - X_j}{X_i - X_j} \right)$
 
 The secret is the intercept, $F(0)$.
 
+![](https://github.com/SheidaAbedpour/Shamir-Secret-Sharing/blob/main/shamir_polynomial_plot.png)
+
+
 ## Python Implementation
 The following Python code implements the Shamir Secret Sharing Scheme. The class `SSS` allows you to:
 - Create shares from a given secret.
