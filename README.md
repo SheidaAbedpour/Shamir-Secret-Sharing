@@ -6,7 +6,7 @@ The "Shamir Secret Sharing" method is a cryptographic technique developed by Adi
 2. **Divide the secret among `n` participants**:
    Select `n` points from the polynomial and distribute them to the shareholders.
 3. **Reconstruct the secret**:
-   At least `T-1` participants are needed to reconstruct the secret. These participants collaborate to solve `T` equations with `T` unknowns to find the intercept of the polynomial, which is the secret.
+   At least `T` participants are needed to reconstruct the secret. These participants collaborate to find the intercept of the polynomial, which is the secret.
 
 ## Mathematical Background
 To find the intercept, the Lagrange interpolation formula is used:
