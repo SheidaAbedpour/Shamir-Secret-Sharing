@@ -3,6 +3,9 @@ import sympy as sp
 import random
 from sympy.ntheory.generate import nextprime
 from sympy import isprime, mod_inverse
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 
 
 class SSS:
@@ -27,7 +30,7 @@ class SSS:
         return shares
 
     def get_shares(self):
-        return self.shares
+        return self.shares, self.coeffs, self.p
 
     def reconstruct_secret(self, shares):
         if len(shares) < self.t:
@@ -48,6 +51,23 @@ class SSS:
         return sum([shares[i][1] * L(x, i) % self.p for i in range(self.t)]) % self.p
 
 
+def plot_polynomial(coeffs, p, shares, t_shares):
+    x_vals = list(range(p))
+    y_vals = [sum([coeff * (x ** i) for i, coeff in enumerate(coeffs)]) % p for x in x_vals]
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(x_vals, y_vals, label='Polynomial', color='blue')
+    plt.scatter(*zip(*shares), label='All Shares', color='red')
+    plt.scatter(*zip(*t_shares), label=f'{len(t_shares)} Shares for Reconstruction', color='green')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title("Shamir's Secret Sharing Polynomial")
+    plt.legend()
+    plt.grid(True)
+    plt.savefig('shamir_polynomial_plot.png')
+    print("Plot saved as 'shamir_polynomial_plot.png'")
+
+
 if __name__ == "__main__":
 
     secret = 6
@@ -56,7 +76,7 @@ if __name__ == "__main__":
     p_mode = 13
 
     sss = SSS(secret, num_shares, threshold, p_mode)
-    shares = sss.get_shares()
+    shares, coeffs, p_mode = sss.get_shares()
     print(f'Generated shares: {shares} \n')
 
     # Check if reconstructing with fewer shares than 't' raises an error
@@ -81,4 +101,7 @@ if __name__ == "__main__":
         print("Reconstructed secret with more shares:", reconstructed_secret)
     except ValueError as e:
         print(f'Error: {e} \n')
+
+    selected_shares = shares[:threshold]
+    plot_polynomial(coeffs, p_mode, shares, selected_shares)
 
