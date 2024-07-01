@@ -50,22 +50,30 @@ class SSS:
 
         return sum([shares[i][1] * L(x, i) % self.p for i in range(self.t)]) % self.p
 
+    def plot_polynomial(self, selected_shares):
+        x_vals = list(range(self.p))
+        y_vals = [sum([coeff * (x ** i) for i, coeff in enumerate(self.coeffs)]) % self.p for x in x_vals]
 
-def plot_polynomial(coeffs, p, shares, t_shares):
-    x_vals = list(range(p))
-    y_vals = [sum([coeff * (x ** i) for i, coeff in enumerate(coeffs)]) % p for x in x_vals]
+        plt.figure(figsize=(10, 6))
+        plt.plot(x_vals, y_vals, label='Polynomial', color='blue')
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(x_vals, y_vals, label='Polynomial', color='blue')
-    plt.scatter(*zip(*shares), label='All Shares', color='red')
-    plt.scatter(*zip(*t_shares), label=f'{len(t_shares)} Shares for Reconstruction', color='green')
-    plt.xlabel('x')
-    plt.ylabel('y')
-    plt.title("Shamir's Secret Sharing Polynomial")
-    plt.legend()
-    plt.grid(True)
-    plt.savefig('shamir_polynomial_plot.png')
-    print("Plot saved as 'shamir_polynomial_plot.png'")
+        shares_x = [share[0] for share in self.shares]
+        shares_y = [share[1] for share in self.shares]
+        plt.scatter(shares_x, shares_y, label='All Shares', color='red')
+
+        selected_x = [share[0] for share in selected_shares]
+        selected_y = [share[1] for share in selected_shares]
+        plt.scatter(selected_x, selected_y, label=f'{len(selected_shares)} Shares for Reconstruction', color='green')
+
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.title("Shamir's Secret Sharing Polynomial")
+        plt.legend()
+        plt.grid(True)
+
+        plot_filename = 'shamir_polynomial_plot.png'
+        plt.savefig(plot_filename)
+        plt.close()
 
 
 if __name__ == "__main__":
@@ -102,6 +110,5 @@ if __name__ == "__main__":
     except ValueError as e:
         print(f'Error: {e} \n')
 
-    selected_shares = shares[:threshold]
-    plot_polynomial(coeffs, p_mode, shares, selected_shares)
+    sss.plot_polynomial(shares[:threshold])
 
